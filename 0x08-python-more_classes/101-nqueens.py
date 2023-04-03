@@ -1,63 +1,89 @@
 #!/usr/bin/python3
-"""N Queens Module.
-
-Contains the N Queens problem solver.
-"""
-import sys
+from sys import argv
 
 
-def error_exit(message="", code=1):
-    """Handles exit.
+class Chessboard:
+    """Represents a chessboard."""
+    def __init__(self, size):
+        """Initialize the data."""
+        self.size = size
+        self.cols = []
 
-    Args:
-        message (str): the message to display on stdout.
-        code (int): the exit code.
-    """
-    print(message)
-    exit(code)
+    def place_in_next_row(self, col):
+        """Place in next row."""
+        self.cols.append(col)
+
+    def remove_in_current_row(self):
+        """Remove in current row."""
+        return self.cols.pop()
+
+    def next_row_safe(self, col):
+        """Check if current col in the next row is safe."""
+        row = len(self.cols)
+        for q_col in self.cols:
+            if col == q_col:
+                return False
+
+        for q_row, q_col in enumerate(self.cols):
+            if q_col - q_row == col - row:
+                return False
+
+        for q_row, q_col in enumerate(self.cols):
+            if self.size - q_col - q_row == self.size - col - row:
+                return False
+
+        return True
+
+    def display(self):
+        """Display a valid solution."""
+        print('[', end='')
+        for row in range(self.size):
+            for col in range(self.size):
+                if col == self.cols[row]:
+                    print('[{}, {}]'.format(row, col), end='')
+                    if row < self.size - 1:
+                        print(', ', end='')
+        print(']')
 
 
-def test_pos(board, y):
-    """Tests if wether a queen can be placed at the current position.
+def solve(size):
+    """Solve the N queens problem."""
+    board = Chessboard(size)
+    row = col = 0
+    while True:
+        while col < size:
+            if board.next_row_safe(col):
+                board.place_in_next_row(col)
+                row += 1
+                col = 0
+                break
+            else:
+                col += 1
 
-    Args:
-        board (list): the chessboard.
-        y (int): the height parameter.
-    """
-    for i in range(y):
-        if board[y][1] is board[i][1]:
-            return False
-        if abs(board[y][1] - board[i][1]) == y - i:
-            return False
-    return True
+        if col == size or row == size:
+            if row == size:
+                board.display()
+                board.remove_in_current_row()
+                row -= 1
 
+            try:
+                prev_col = board.remove_in_current_row()
+            except IndexError:
+                break
 
-def rec_backtrack(board, y):
-    """Backtrack the possibilities.
+            row -= 1
+            col = 1 + prev_col
 
-    Args:
-        board (list): the chessboard.
-        y (int): the height parameter.
-    """
-    if y is N:
-        print(board)
-    else:
-        for x in range(N):
-            board[y][1] = x
-            if test_pos(board, y):
-                rec_backtrack(board, y + 1)
-
-
-if len(sys.argv) is not 2:
-    error_exit("Usage: nqueens N")
-
+if len(argv) != 2:
+    print('Usage: nqueens N')
+    exit(1)
 try:
-    N = int(sys.argv[1])
-except:
-    error_exit("N must be a number")
+    queens = int(argv[1])
+except ValueError:
+    print('N must be a number')
+    exit(1)
+if queens < 4:
+    print('N must be at least 4')
+    exit(1)
 
-if N < 4:
-    error_exit("N must be at least 4")
-
-board = [[y, 0] for y in range(N)]
-rec_backtrack(board, 0)
+solve(queens)
