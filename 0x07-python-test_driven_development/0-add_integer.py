@@ -1,31 +1,18 @@
 #!/usr/bin/python3
 """
-This is the add_integer module.
-This module supplies one function, add_integer().
+This is the "add integer" module.
+
+The add integer module supplies one function, add_integer().
 """
 
 
 def add_integer(a, b=98):
     """
-    Return the addition of a and b.
-    Args:
-        a (int, float): the first value.
-        b (int, float): the second value.
+    Return the sum of a and b, two integers.
     """
-    if type(a) in [int, float]:
-        try:
-            a = int(a)
-        except:
-            raise TypeError('a must be an integer')
-    else:
+
+    if type(a) is not int and type(a) is not float:
         raise TypeError('a must be an integer')
-
-    if type(b) in [int, float]:
-        try:
-            b = int(b)
-        except:
-            raise TypeError('b must be an integer')
-    else:
+    if type(b) is not int and type(b) is not float:
         raise TypeError('b must be an integer')
-
-    return a + b
+    return int(a) + int(b)
