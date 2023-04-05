@@ -1,17 +1,15 @@
 #!/usr/bin/python3
 """
-This is the lazy_matrix_mul module.
-This module supplies one function, lazy_matrix_mul().
+    This module contains a function that uses the numpy
+    module to multiply two matrices
 """
+
+
 import numpy as np
 
 
 def lazy_matrix_mul(m_a, m_b):
-    """
-    Return a new matrix where each element has been divided by div.
-    Args:
-        m_a (list): list of lists of integers or floats.
-        m_b (list): list of lists of integers or floats.
-    """
+    """ Multiplies two matrices using the numpy module """
 
-    return np.dot(m_a, m_b)
+    matrix_mul = np.matmul(m_a, m_b).tolist()
+    return matrix_mul
